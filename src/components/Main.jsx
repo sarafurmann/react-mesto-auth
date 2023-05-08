@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { PopupWithForm } from '../PopupWithForm'
-import { ImagePopup } from '../ImagePopup'
-import { api } from '../../utils/Api'
-import avatar from '../../images/Avatar.png'
-import { Card } from '../Card'
+import { PopupWithForm } from './PopupWithForm'
+import { ImagePopup } from './ImagePopup'
+import { api } from '../utils/Api'
+import avatar from '../images/Avatar.png'
+import { Card } from './Card'
 
 export const Main = ({
     isEditProfilePopupOpen,

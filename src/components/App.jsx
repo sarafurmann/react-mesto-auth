@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { Header } from '../Header';
-import { Footer } from '../Footer';
-import { Main } from '../Main';
-
-import './App.css';
+import { Header } from './Header';
+import { Footer } from './Footer';
+import { Main } from './Main';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
