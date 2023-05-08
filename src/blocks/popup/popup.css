@@ -1,0 +1,21 @@
+.popup {
+    display: flex;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, .5);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: -9999px;
+    z-index: 1;
+    visibility: hidden;
+    transition: opacity .3s ease-out;
+    opacity: 0;
+}
+
+.popup.popup_opened {
+    visibility: visible;
+    opacity: 1;
+    left: 0;
+}

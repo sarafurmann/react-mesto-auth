@@ -1,0 +1,10 @@
+.element-zoom__container {
+    margin-top: 20px;
+    position: relative;
+}
+
+@media screen and (max-width: 1023px) {
+    .element-zoom__container {
+        margin-top: 44px;
+    }
+}

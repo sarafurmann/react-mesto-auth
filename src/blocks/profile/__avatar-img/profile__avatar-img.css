@@ -1,0 +1,12 @@
+.profile__avatar-img {
+    object-fit: cover;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    cursor: url(../../../images/Vector.png), pointer;
+    object-position: center;
+}
+
+.profile__avatar-img:hover {
+    opacity: 0.2;
+}

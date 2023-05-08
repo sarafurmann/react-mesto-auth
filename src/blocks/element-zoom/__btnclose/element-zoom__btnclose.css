@@ -1,0 +1,29 @@
+.element-zoom__btnclose {
+    background-image: url(../../../images/btnclose.svg);
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-color: rgba(0, 0, 0, 0);
+    width: 32px;
+    height: 32px;
+    top: -40px;
+    right: -40px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    transition: opacity .1s linear;
+    cursor: pointer;
+}
+
+.element-zoom__btnclose:hover {
+    opacity: .6;
+}
+
+@media screen and (max-width: 1023px) {
+    .element-zoom__btnclose {
+        width: 20px;
+        height: 20px;
+        top: -36px;
+        right: 0;
+    }
+}
