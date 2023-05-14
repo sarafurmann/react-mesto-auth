@@ -3,12 +3,13 @@ export const PopupWithForm = ({
     name,
     title,
     onClose,
+    onSubmit,
     children
 }) => {
     return (
         <div className={`popup${isOpen ? ' popup_opened' : ''}`}>
             <div className="popup__container">
-                <form className="popup__form" name={name} noValidate>
+                <form onSubmit={onSubmit} className="popup__form" name={name} noValidate>
                     <h2 className="popup__title">{title}</h2>
                     {children}
                     <button className="popup__btn-save" type="submit" title="Сохранить">Сохранить</button>
