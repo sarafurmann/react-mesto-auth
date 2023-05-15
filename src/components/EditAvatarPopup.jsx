@@ -7,7 +7,7 @@ export const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        onUpdateAvatar(avatarRef.current.value).then(onClose)
+        onUpdateAvatar(avatarRef.current.value)
     }
 
     return (

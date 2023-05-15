@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Header } from './Header'
 import { Footer } from './Footer'
-import { PopupWithForm } from './PopupWithForm'
 import { EditProfilePopup } from './EditProfilePopup'
 import { ImagePopup } from './ImagePopup'
 import { Main } from './Main'
-import { api } from '../utils/Api'
+import { api } from '../utils/api'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { EditAvatarPopup } from './EditAvatarPopup'
 import { AppPlacePopup } from './AddPlacePopup'
+import { mapCard } from '../utils/utils'
+import { PopupWithForm } from './PopupWithForm'
 
 function App() {
   const [currentUser, setCurrentUser] = useState({})
@@ -43,74 +44,58 @@ function App() {
 
   const handleCardLike = (card) => {
     const isLiked = card.likes.some(i => i._id === currentUser._id)
+    const action = isLiked ? api.dislikeCard.bind(api) : api.likeCard.bind(api)
 
-    if (isLiked) {
-      api.dislikeCard(card.id).then((newCard) => {
-        setCards(
-          (prev) => prev.map(
-            (c) => c.id === newCard._id
-              ? {
-                  name: newCard.name,
-                  link: newCard.link,
-                  id: newCard._id,
-                  likeCount: newCard.likes.length,
-                  owner: newCard.owner,
-                  likes: newCard.likes,
-              }
-              : c
-          )
+    action(card.id).then((newCard) => {
+      setCards(
+        (prev) => prev.map(
+          (c) => c.id === newCard._id
+            ? mapCard(newCard)
+            : c
         )
-      })
-    } else {
-      api.likeCard(card.id).then((newCard) => {
-        setCards(
-          (prev) => prev.map(
-            (c) => c.id === newCard._id
-              ? {
-                  name: newCard.name,
-                  link: newCard.link,
-                  id: newCard._id,
-                  likeCount: newCard.likes.length,
-                  owner: newCard.owner,
-                  likes: newCard.likes,
-              }
-              : c
-          )
-        )
-      })
-    }
+      )
+    })
+    .catch(console.error)
   }
 
   const handleCardDelete = (card) => {
-    api.deleteCard(card.id).then(() => {
-      setCards(
-        (prev) => prev.filter((c) => c.id !== card.id)
-      )
-    })
+    api
+      .deleteCard(card.id)
+      .then(() => {
+        setCards(
+          (prev) => prev.filter((c) => c.id !== card.id)
+        )
+      })
+      .catch(console.error)
   }
 
   const handleUpdateUser = ({ name, about }) => {
-    return api.editUser(name, about).then(setCurrentUser)
+    api
+      .editUser(name, about)
+      .then(setCurrentUser)
+      .then(closeAllPopups)
+      .catch(console.error)
   }
 
   const handleUpdateAvatar = (avatar) => {
-    return api.editUserAvatar(avatar).then(setCurrentUser)
+    api
+      .editUserAvatar(avatar)
+      .then(setCurrentUser)
+      .then(closeAllPopups)
+      .catch(console.error)
   }
 
   const handleAddPlace = ({ name, link }) => {
-    return api.addCard(name, link).then((newCard) => {
-      setCards((prev) => [
-        {
-          name: newCard.name,
-          link: newCard.link,
-          id: newCard._id,
-          likeCount: newCard.likes.length,
-          owner: newCard.owner,
-          likes: newCard.likes,
-        },
-        ...prev
-      ])
-    })
+    api
+      .addCard(name, link)
+      .then((newCard) => {
+        setCards((prev) => [
+          mapCard(newCard),
+          ...prev
+        ])
+      })
+      .then(closeAllPopups)
+      .catch(console.error)
   }
 
   useEffect(() => {
@@ -120,19 +105,10 @@ function App() {
     ]).then(([newUser, newCards]) => {
       setCurrentUser(newUser)
       setCards(
-        newCards.map((card) => {
-            return {
-                name: card.name,
-                link: card.link,
-                id: card._id,
-                likeCount: card.likes.length,
-                owner: card.owner,
-                likes: card.likes,
-            }
-        })
+        newCards.map(mapCard)
       )
     })
-    api.getUser().then(setCurrentUser)
+    .catch(console.error)
   }, [])
 
   return (
@@ -167,15 +143,13 @@ function App() {
             onAddPlace={handleAddPlace}
         />
 
-        <div className="popup" id="popup__confirm">
-            <div className="popup__container">
-                <form className="popup__form" name="confirm" noValidate>
-                    <h2 className="popup__title">Вы уверены?</h2>
-                    <button className="popup__btn-save popup__btn-confirm" type="submit" title="Подтвердить">Да</button>
-                    <button type="button" aria-label="Кнопка закрыть" className="popup__btn-close"></button>
-                </form>
-            </div>
-        </div>
+        <PopupWithForm
+          name="confirm"
+          title="Вы уверены?"
+        >
+          <button className="popup__btn-save popup__btn-confirm" type="submit" title="Подтвердить">Да</button>
+          <button type="button" aria-label="Кнопка закрыть" className="popup__btn-close"></button>
+        </PopupWithForm>
 
         {selectedCard ? (
             <ImagePopup card={selectedCard} onClose={closeAllPopups} />

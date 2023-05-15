@@ -11,7 +11,7 @@ export const AppPlacePopup = ({ isOpen, onClose, onAddPlace }) => {
         onAddPlace({
             name,
             link
-        }).then(onClose)
+        })
     }
 
     const handleChange = (e) => {

@@ -13,7 +13,7 @@ export const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
         onUpdateUser({
             name,
             about,
-        }).then(onClose)
+        })
     }
 
     const handleChange = (e) => {
@@ -27,7 +27,7 @@ export const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
     useEffect(() => {
         setName(user.name ?? '');
         setAbout(user.about ?? '');
-    }, [user])
+    }, [user, isOpen])
 
     return (
         <PopupWithForm
