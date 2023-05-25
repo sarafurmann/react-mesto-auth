@@ -1,0 +1,15 @@
+.header__route {
+  background-color: #000;
+  color: white;
+  text-decoration: none;
+  border: none;
+  font-size: 18px;
+  padding: 0;
+}
+  
+@media screen and (max-width: 425px) {
+  .header__route {
+    font-size: 14px;
+    line-height: 17px;
+  }
+}

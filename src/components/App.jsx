@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Routes, Route, Navigate } from "react-router-dom";
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { EditProfilePopup } from './EditProfilePopup'
@@ -10,6 +11,9 @@ import { EditAvatarPopup } from './EditAvatarPopup'
 import { AppPlacePopup } from './AddPlacePopup'
 import { mapCard } from '../utils/utils'
 import { PopupWithForm } from './PopupWithForm'
+import { Register } from './Register'
+import { Login } from './Login'
+import { ProtectedRoute } from './ProtectedRoute'
 
 function App() {
   const [currentUser, setCurrentUser] = useState({})
@@ -115,15 +119,27 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Header />
-        <Main
-          cards={cards}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-        />
+        <Routes>
+          <Route
+            path='/'
+            element={(
+              <ProtectedRoute>
+                <Main
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+              </ProtectedRoute>
+            )}
+          />
+          <Route path='/sign-up' element={<Register />} />
+          <Route path='/sign-in' element={<Login />} />
+          <Route path='*' element={<Navigate to="/" replace />} />
+        </Routes>
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
