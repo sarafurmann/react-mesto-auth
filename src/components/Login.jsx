@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { api } from '../utils/authApi'
-import '../index.css'
 import { useNavigate } from 'react-router-dom'
 
 export const Login = () => {
@@ -17,6 +16,7 @@ export const Login = () => {
                 localStorage.setItem('jwt', data.token)
                 navigate('/')
             })
+            .catch(console.error)
     }
 
     return (
@@ -26,19 +26,17 @@ export const Login = () => {
                 className="auth-form__input form__input_user_email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                type="text"
-                // minLength="2"
-                // maxLength="40"
+                type="email"
                 placeholder="Email"
+                required
             />
             <input
                 className="auth-form__input form__input_user_password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                type="text"
-                // minLength="6"
-                // maxLength="200"
+                type="password"
                 placeholder="Пароль"
+                required
             />
             <button type="submit" className="auth-form__submit-button">Войти</button>
         </form>

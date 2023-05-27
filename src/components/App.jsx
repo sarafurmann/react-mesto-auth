@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { Header } from './Header'
 import { Footer } from './Footer'
 import { EditProfilePopup } from './EditProfilePopup'
 import { ImagePopup } from './ImagePopup'
 import { Main } from './Main'
 import { api } from '../utils/api'
+import { api as authApi } from '../utils/authApi'
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { EditAvatarPopup } from './EditAvatarPopup'
 import { AppPlacePopup } from './AddPlacePopup'
@@ -16,12 +17,16 @@ import { Login } from './Login'
 import { ProtectedRoute } from './ProtectedRoute'
 
 function App() {
+  const location = useLocation()
+  const navigate = useNavigate()
   const [currentUser, setCurrentUser] = useState({})
   const [cards, setCards] = useState([])
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false)
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false)
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false)
   const [selectedCard, setSelectedCard] = useState(null)
+
+  const [email, setEmail] = useState('')
 
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true)
@@ -89,6 +94,11 @@ function App() {
       .catch(console.error)
   }
 
+  const signOut = () => {
+      localStorage.removeItem('jwt')
+      navigate('/sign-in')
+  }
+
   const handleAddPlace = ({ name, link }) => {
     api
       .addCard(name, link)
@@ -103,6 +113,17 @@ function App() {
   }
 
   useEffect(() => {
+      authApi
+        .me()
+        .then(({ data }) => setEmail(data.email))
+        .catch(console.error)
+  }, [location])
+
+  useEffect(() => {
+    if (!localStorage.getItem('jwt')) {
+      return
+    }
+
     Promise.all([
       api.getUser(),
       api.getInitialCards(),
@@ -113,12 +134,12 @@ function App() {
       )
     })
     .catch(console.error)
-  }, [])
+  }, [location])
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
+        <Header onSignOut={signOut} email={email} />
         <Routes>
           <Route
             path='/'

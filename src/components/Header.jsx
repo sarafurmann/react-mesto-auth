@@ -1,23 +1,8 @@
-import { Routes, Route, Link, useNavigate } from 'react-router-dom'
-import '../index.css'
+import { Routes, Route, Link } from 'react-router-dom'
 
 import logo from '../images/logo.svg'
-import { useEffect, useState } from 'react'
-import { api } from '../utils/authApi'
 
-export const Header = () => {
-    const navigate = useNavigate()
-    const [email, setEmail] = useState('')
-
-    const signOut = () => {
-        localStorage.removeItem('jwt')
-        navigate('/sign-in')
-    }
-
-    useEffect(() => {
-        api.me().then(({ data }) => setEmail(data.email))
-    }, [email])
-
+export const Header = ({ onSignOut, email }) => {
     return (
         <header className="header">
             <div className="header__routes">
@@ -29,7 +14,7 @@ export const Header = () => {
                         element={(
                             <div className='header__info'>
                                 <span>{email}</span>
-                                <button className="header__route" onClick={signOut} type='button'>Выйти</button>
+                                <button className="header__route" onClick={onSignOut} type='button'>Выйти</button>
                             </div>
                         )}
                     />
